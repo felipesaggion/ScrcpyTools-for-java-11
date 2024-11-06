@@ -23,6 +23,9 @@ class TaskManager : Initializable {
     lateinit var buttonInstall: Button
 
     @FXML
+    lateinit var buttonReinstall: Button
+
+    @FXML
     lateinit var buttonStart: Button
 
     @FXML
@@ -110,9 +113,9 @@ class TaskManager : Initializable {
             }
         lockControls(true)
         thread {
-            val installSucceded = ADB.install(DataHolder.instance.device, pathToApk)
+            val installSucceeded = ADB.install(DataHolder.instance.device, pathToApk)
             lockControls(false)
-            if (installSucceded) {
+            if (installSucceeded) {
                 Platform.runLater {
                     loadPackages()
                     Alert(AlertType.INFORMATION, "APK installed successfully").show()
@@ -123,8 +126,41 @@ class TaskManager : Initializable {
         }
     }
 
+    @FXML
+    fun buttonReinstallOnAction() {
+        val fileChooser =
+            FileChooser().apply {
+                title = "Select the apk file"
+                initialDirectory = File(File("").absolutePath)
+                initialFileName = ""
+                extensionFilters.add(FileChooser.ExtensionFilter("APK files", "*.apk"))
+            }
+        val file = fileChooser.showOpenDialog(buttonInstall.scene.window) ?: return
+
+        val pathToApk =
+            if (file.absolutePath.lowercase().endsWith(".apk")) {
+                file.absolutePath
+            } else {
+                file.absolutePath + ".apk"
+            }
+        lockControls(true)
+        thread {
+            val installSucceeded = ADB.reinstall(DataHolder.instance.device, pathToApk)
+            lockControls(false)
+            if (installSucceeded) {
+                Platform.runLater {
+                    loadPackages()
+                    Alert(AlertType.INFORMATION, "APK re-installed successfully").show()
+                }
+            } else {
+                Platform.runLater { Alert(AlertType.ERROR, "Failed to install the apk").show() }
+            }
+        }
+    }
+
     private fun lockControls(lock: Boolean) {
         buttonInstall.isDisable = lock
+        buttonReinstall.isDisable = lock
         buttonStart.isDisable = lock
         buttonForceStop.isDisable = lock
         buttonClearData.isDisable = lock

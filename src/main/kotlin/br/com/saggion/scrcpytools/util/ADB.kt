@@ -185,6 +185,27 @@ object ADB {
         }
     }
 
+    fun reinstall(
+        device: Device,
+        pathToApk: String,
+    ): Boolean {
+        val pb = ProcessBuilder()
+        pb.command().add(adb)
+        pb.command().add("-s")
+        pb.command().add(device.serial)
+        pb.command().add("install")
+        pb.command().add("-r")
+        pb.command().add(pathToApk)
+        logCommand(pb.command())
+
+        val process = pb.start()
+        process.waitFor()
+        return process.inputStream.bufferedReader().use { bufferedReader ->
+            val result = bufferedReader.readLines().joinToString("\n")
+            return@use !result.contains("Failure")
+        }
+    }
+
     fun startShellConsole(device: Device) {
         val pb = ProcessBuilder()
         pb.command().add("cmd")
