@@ -58,14 +58,14 @@ object ADB {
         logCommand(pb.command())
 
         val process = pb.start()
-        process.waitFor()
+        val processes = mutableListOf<String>()
         process.inputStream.bufferedReader().use { bufferedReader ->
-            val packages =
-                bufferedReader.readLines().filter { it.isNotEmpty() }.map { line ->
-                    line.substring(8)
-                }
-            return packages
+            processes.addAll(bufferedReader.readLines().filter { it.isNotEmpty() }.map { line ->
+                line.substring(8)
+            })
         }
+        process.waitFor()
+        return processes
     }
 
     fun start(
