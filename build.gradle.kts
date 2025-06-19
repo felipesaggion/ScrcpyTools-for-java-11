@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "br.com.saggion"
-version = "1.2.0"
+version = "1.2.1"
 description = "A project that provides an interface to use some functionality of the tools scrcpy and adb."
 
 javafx {
