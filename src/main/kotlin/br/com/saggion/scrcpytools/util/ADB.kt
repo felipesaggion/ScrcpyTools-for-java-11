@@ -5,7 +5,7 @@ import javafx.scene.control.TextArea
 import java.io.File
 
 object ADB {
-    private val adb = File("${Constants.TEMP_DIRECTORY}scrcpy-tools/scrcpy-win64-v2.4/adb.exe").absolutePath
+    private val adb = File(Constants.ADB_PATH).absolutePath
     var textArea: TextArea? = null
 
     fun listDevices(): List<Device> {

@@ -6,7 +6,7 @@ import javafx.scene.control.TextArea
 import java.io.File
 
 object SCRCPY {
-    private val scrcpy = File("${Constants.TEMP_DIRECTORY}scrcpy-tools/scrcpy-win64-v2.4/scrcpy.exe").absolutePath
+    private val scrcpy = File(Constants.SCRCPY_PATH).absolutePath
     var textArea: TextArea? = null
 
     fun mirrorScreen(
